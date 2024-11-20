@@ -40,7 +40,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://192.168.1.15:4000/api/books/all");
+        const response = await axios.get("http://192.168.1.14:4000/api/books/all");
         setProducts(response.data);
       } catch (error) {
         console.log("error message", error);
@@ -62,7 +62,7 @@ const HomeScreen = () => {
     }} >
       <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
         <View style={{
-          backgroundColor: "#00CED1",
+          backgroundColor: "#6633CC",
           padding: 10,
           flexDirection: "row",
           alignItems: "center",

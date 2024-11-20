@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 const ProductItem = ({ item }) => {
     const [addedToCart, setAddedToCart] = useState(false);
     const navigation = useNavigation();
+    // console.log(item.cover); // Kiểm tra xem cover là gì
     return (
         <View style={{ paddingLeft: 4, margin: 16 }} >
             <Pressable
@@ -15,13 +16,13 @@ const ProductItem = ({ item }) => {
                     description: item.description,
                     language: item.language,
                     genres: item.genres,
-                    pages: item?.pages,
-                    discountPrice: item?.discountPrice,
+                    pages: item.pages,
+                    discountPrice: item.discountPrice,
                     publisher: item.publisher,
-                    cover: item.cover,
+                    cover: item.cover, // Truyền chuỗi URL
                 })}
             >
-
+                
                 <Image
                     style={{ width: 150, height: 150, resizeMode: 'contain' }}
                     source={{ uri: item?.cover || 'https://ih1.redbubble.net/image.4905811447.8675/flat,750x,075,f-pad,750x1000,f8f8f8.jpg' }} // Fallback image if item?.cover is undefined
