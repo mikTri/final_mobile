@@ -17,6 +17,9 @@ import axios from 'axios';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ProductItem from '../components/ProductItem';
 import { useNavigation } from '@react-navigation/native';
+import RNPickerSelect from 'react-native-picker-select';
+
+import SearchBar from '../components/SearchBar';
 
 const { width } = Dimensions.get('window');
 
@@ -26,21 +29,23 @@ const HomeScreen = () => {
     "https://assets.penguinrandomhouse.com/wp-content/uploads/2018/03/05105825/1200x628_instagrammable.jpg",
     "https://as2.ftcdn.net/v2/jpg/04/32/32/87/1000_F_432328795_gyl6zdxtuKrwTDLSOgLF2NfnHNLkg1oC.jpg",
   ];
-  const [category, setCategory] = useState("Children");
-  const [items, setItems] = useState([
-    { label: "Biographies & Memoirs", value: "Biographies & Memoirs" },
-    { label: "History", value: "History" },
-    { label: "Children", value: "Children" },
-    { label: "Romance", value: "Romance" },
-  ]);
+  // const [category, setCategory] = useState("Children");
+  // const [items, setItems] = useState([
+  //   { label: "Biographies & Memoirs", value: "Biographies & Memoirs" },
+  //   { label: "History", value: "History" },
+  //   { label: "Children", value: "Children" },
+  //   { label: "Romance", value: "Romance" },
+  // ]);
   const [products, setProducts] = useState([]);
   const navigation = useNavigation();
   const [open, setOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [categories, setCategories] = useState([]); // state lưu danh sách categories
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://192.168.1.14:4000/api/books/all");
+        const response = await axios.get("https://nhom1-be.onrender.com/api/books/all");
         setProducts(response.data);
       } catch (error) {
         console.log("error message", error);
@@ -53,37 +58,28 @@ const HomeScreen = () => {
     setCompanyOpen(false);
   }, []);
 
-  const filteredProducts = products.filter((item) => item.genres === category);
-  return (
-    <SafeAreaView style={{
-      paddingTop: Platform.OS === "android" ? 59 : 0,
-      flex: 1,
-      backgroundColor: "white"
-    }} >
-      <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={{
-          backgroundColor: "#6633CC",
-          padding: 10,
-          flexDirection: "row",
-          alignItems: "center",
-        }}>
-          <Pressable style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginHorizontal: 7,
-            gap: 10,
-            backgroundColor: "white",
-            borderRadius: 3,
-            height: 38,
-            flex: 1,
-          }}>
-            <AntDesign style={{ paddingLeft: 10 }} name="search1" size={24} color="black" />
-            <TextInput placeholder="Tim kiem sach" />
-          </Pressable>
-        </View>
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("https://nhom1-be.onrender.com/api/categories/all");
+        console.log("Categories data:", response.data); // Kiểm tra dữ liệu trả về
+        setCategories(response.data); // Giả sử API trả về danh sách categories dưới dạng mảng
+      } catch (error) {
+        console.log("Error fetching categories", error);
+      }
+    };
 
+    fetchCategories();
+  }, []);
+  return (
+    <SafeAreaView style={styles.container}>
+
+      <View style={styles.header}>
+        <SearchBar onSearch={setSearchResults} />
+      </View>
+      <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
         <FlatList
-          style={{ paddingTop: 10 }}
+          style={styles.imageSlider}
           data={images}
           keyExtractor={(item, index) => index.toString()}
           horizontal
@@ -93,43 +89,30 @@ const HomeScreen = () => {
             <Image source={{ uri: item }} style={styles.image} />
           )}
         />
-        
-        <View nestedScrollEnabled={true}
-          style={{
-            marginHorizontal: 10,
-            marginTop: 20,
-            marginBottom: open ? 20 : 20,
-            justifyContent: 'center',
-          }}>
+
+        <View style={styles.dropdownContainer}>
           <DropDownPicker
-            style={{
-              borderColor: "#B7B7B7",
-              height: 30,
-              marginBottom: open ? 15 : 15,
-              justifyContent: 'center',
-            }}
+            style={styles.dropdown}
             open={open}
-            value={category}
-            items={items}
+            value={categories}
+            items={setCategories}
             setOpen={setOpen}
-            setValue={setCategory}
-            setItems={setItems}
+            setValue={categories}
+            setItems={setCategories}
             placeholder="choose category"
             placeholderStyle={styles.placeholderStyles}
             onOpen={onGenderOpen}
             zIndex={3000}
             zIndexInverse={1000}
           />
+
+
         </View>
 
-        <View style={{
-          flexDirection: "row",
-          alignItems: "center",
-          flexWrap: "wrap",
-          margin: 14,
-        }}>
+
+        <View style={styles.productList}>
           {products
-            ?.filter((item) => item.genres === category)
+            ?.filter((item) => item.genres === categories)
             .map((item, index) => (
               <ProductItem item={item} key={index} />
             ))}
@@ -140,10 +123,55 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: Platform.OS === "android" ? 59 : 0,
+    flex: 1,
+    backgroundColor: "white"
+  },
+  header: {
+    backgroundColor: "#6633CC",
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 7,
+    gap: 10,
+    backgroundColor: "white",
+    borderRadius: 3,
+    height: 38,
+    flex: 1,
+  },
+  icon: { paddingLeft: 10 },
+  imageSlider: { paddingTop: 10 },
   image: {
     width: width,
     height: 200,
     resizeMode: 'cover',
+  },
+  dropdownContainer: {
+    marginHorizontal: 10,
+    marginTop: 20,
+    marginBottom: 20,
+    justifyContent: 'center',
+  },
+  dropdown: {
+    borderColor: "#B7B7B7",
+    height: 30,
+    marginBottom: 15,
+    justifyContent: 'center',
+  },
+  placeholderStyles: {
+    color: "#B7B7B7",
+    fontSize: 14,
+  },
+  productList: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    margin: 14,
   },
 });
 

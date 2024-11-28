@@ -28,19 +28,7 @@ const ProductInfoScreen = () => {
 
     return (
         <ScrollView style={{ marginTop: 60, flex: 1, backgroundColor: 'white' }}>
-            {/* Header */}
-            <View style={styles.header}>
-                <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <FontAwesome5 name="arrow-alt-circle-left" size={26} color="white" />
-
-
-                </Pressable>
-
-                <Pressable style={styles.searchBar}>
-                    <AntDesign style={{ paddingLeft: 10 }} name="search1" size={24} color="black" />
-                    <TextInput placeholder="Tim kiem sach" />
-                </Pressable>
-            </View>
+            
 
             {/* Ảnh bìa */}
             <ImageBackground
@@ -50,79 +38,79 @@ const ProductInfoScreen = () => {
             >
             </ImageBackground>
 
-            <View style={{ padding: 10 }}>
-                <Text style={{ fontSize: 15, fontWeight: "500" }}>
+            <View>
+                <Text style={{ fontSize: 30, fontWeight: "500", padding: 10, marginTop: 10 }}>
                     {route?.params?.title}
                 </Text>
-
-                <View style={{ flexDirection: "row", marginTop: 6 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "600" }}>
-                        $ {route.params.discountPrice}
-                    </Text>
-
-                    <View style={{ flexDirection: "row", alignItems: "right" }}>
-                        <Text style={{}}> Rating:</Text>
-                        <Text style={{ fontSize: 15, fontWeight: "bold", color: 'blue' }}>
-                            {route.params.rating}
-                        </Text>
-                    </View>
-                </View>
+            </View>
+            <View style={{ flexDirection: "row", padding: 10 }}>
+                <Text style={{ fontSize: 18, fontWeight: "600", color: '#4CAF50' }}>
+                    {route.params.discountPrice.toLocaleString('en-US')} VNĐ
+                </Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "right", padding: 10, fontSize: 15 }}>
+                <Text style={{}}>Đánh giá: </Text>
+                <Text style={{ fontWeight: "bold", color: '#F4A460' }}>
+                    {route.params.rating}
+                </Text>
             </View>
 
-            <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
-                <Text>Author: </Text>
-                <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", padding: 10, fontSize: 15 }}>
+                <Text>Tác giả: </Text>
+                <Text style={{ fontWeight: "bold" }}>
                     {route.params.author}
                 </Text>
             </View>
 
-            <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
-                <Text>Publisher: </Text>
+            <View style={{ flexDirection: "row", alignItems: "center", padding: 10, fontSize: 15 }}>
+                <Text>NXB: </Text>
                 <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                     {route.params.publisher}
                 </Text>
             </View>
 
-            <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
-                <Text>Genres: </Text>
+            <View style={{ fontSize: 15, flexDirection: "row", alignItems: "center", padding: 10 }}>
+                <Text>Thể loại: </Text>
                 <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                     {route.params.genres}
                 </Text>
             </View>
 
-            <View style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
-                <Text>Language: </Text>
+            <View style={{ fontSize: 15, flexDirection: "row", alignItems: "center", padding: 10 }}>
+                <Text>Ngôn ngữ: </Text>
                 <Text style={{ fontSize: 15, fontWeight: "bold" }}>
                     {route.params.language}
                 </Text>
             </View>
-
-            <View style={{ flexDirection: "row", alignItems: "center", margin: 10 }}>
-
-                <Text style={{ fontSize: 16, fontWeight: "light", textAlign: 'justify', paddingRight:6 }}>
-                    {route.params.description}
-                </Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold", textDecorationLine: 'underline', textAlign: 'justify', padding: 10 }}>
+            Mô tả
+            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "light", textAlign: 'justify', padding: 10 }}>
+                {route.params.description}
+            </Text>
+            <View style={{ paddingBottom: 25 }}>
+                <Pressable
+                    onPress={() => addItemToCart(route?.params?.item)}
+                    style={{
+                        backgroundColor: "#FFC72C",
+                        padding: 10,
+                        borderRadius: 20,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginHorizontal: 10,
+                        marginVertical: 10,
+                    }}
+                >
+                    {addedToCart ? (
+                        <View >
+                            <Text>Added to Cart</Text>
+                        </View>
+                    ) : (
+                        <Text>Add to Cart</Text>
+                    )}
+                </Pressable>
             </View>
-            <Pressable
-                onPress={() => addItemToCart(route?.params?.item)}
-                style={{
-                    backgroundColor: "#FFC72C",
-                    padding: 10,
-                    borderRadius: 20,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginHorizontal: 10,
-                    marginVertical: 10,
-                }}
-            >
-                {addedToCart ? (
-                    <View>
-                        <Text>Added to Cart</Text>
-                    </View>
-                ) : (
-                    <Text>Add to Cart</Text>
-                )}
-            </Pressable>
+
 
         </ScrollView>
     );

@@ -37,8 +37,8 @@ const ProductItem = ({ item }) => {
                         alignItems: "center",
                         justifyContent: "space-between",
                     }}>
-                    <Text style={{ fontSize: 15, fontWeight: "bold" }}>${item?.discountPrice}</Text>
-                    <Text style={{ color: "#F4A460", fontWeight: "bold" }}> rate {item?.rating}
+                    <Text style={{ fontSize: 13, fontWeight: "bold", color: '#4CAF50' }}>{item?.discountPrice.toLocaleString('en-US')} VNĐ</Text>
+                    <Text style={{ color: "#F4A460", fontWeight: "bold", fontSize: 13 }}>{item?.rating}
                     </Text>
                 </View>
                 <Pressable
