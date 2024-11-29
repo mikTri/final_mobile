@@ -2,22 +2,18 @@ import {
     StyleSheet,
     Text,
     View,
-    Dimensions,
-    TextInput,
     Pressable,
     ScrollView,
     ImageBackground,
 } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useNavigation, useRoute } from "@react-navigation/native";
-
 
 const ProductInfoScreen = () => {
     const route = useRoute();
-    const navigation = useNavigation();
+
     const [addedToCart, setAddedToCart] = useState(false);
+
     const addItemToCart = (item) => {
         setAddedToCart(true);
         dispatch(addToCart(item));
@@ -25,15 +21,13 @@ const ProductInfoScreen = () => {
             setAddedToCart(false);
         }, 60000);
     };
-
+    
     return (
         <ScrollView style={{ marginTop: 60, flex: 1, backgroundColor: 'white' }}>
-            
-
             {/* Ảnh bìa */}
             <ImageBackground
                 style={styles.coverImage} // Áp dụng style từ StyleSheet
-                source={{ uri: route.params.cover || 'https://example.com/default-image.jpg' }} // Sử dụng ảnh mặc định nếu cover bị thiếu
+                source={{ uri: route.params.cover }} 
                 resizeMode="contain"
             >
             </ImageBackground>

@@ -1,23 +1,18 @@
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
   Dimensions,
   SafeAreaView,
   Platform,
-  TextInput,
   Image,
-  Pressable,
   ScrollView,
 } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
-import DropDownPicker from 'react-native-dropdown-picker';
 import ProductItem from '../components/ProductItem';
 import { useNavigation } from '@react-navigation/native';
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect from "react-native-picker-select";
 
 import SearchBar from '../components/SearchBar';
 
@@ -29,19 +24,12 @@ const HomeScreen = () => {
     "https://assets.penguinrandomhouse.com/wp-content/uploads/2018/03/05105825/1200x628_instagrammable.jpg",
     "https://as2.ftcdn.net/v2/jpg/04/32/32/87/1000_F_432328795_gyl6zdxtuKrwTDLSOgLF2NfnHNLkg1oC.jpg",
   ];
-  // const [category, setCategory] = useState("Children");
-  // const [items, setItems] = useState([
-  //   { label: "Biographies & Memoirs", value: "Biographies & Memoirs" },
-  //   { label: "History", value: "History" },
-  //   { label: "Children", value: "Children" },
-  //   { label: "Romance", value: "Romance" },
-  // ]);
   const [products, setProducts] = useState([]);
+  const [items, setItems] = useState([]);
+  const [category, setCategory] = useState([]);
   const navigation = useNavigation();
-  const [open, setOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [categories, setCategories] = useState([]); // state lưu danh sách categories
 
+  // Fetch books
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,29 +42,31 @@ const HomeScreen = () => {
     fetchData();
   }, []);
 
-  const onGenderOpen = useCallback(() => {
-    setCompanyOpen(false);
-  }, []);
-
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get("https://nhom1-be.onrender.com/api/categories/all");
-        console.log("Categories data:", response.data); // Kiểm tra dữ liệu trả về
-        setCategories(response.data); // Giả sử API trả về danh sách categories dưới dạng mảng
+        setItems(response.data);
       } catch (error) {
-        console.log("Error fetching categories", error);
+        console.log("Error fetching categories:", error);
       }
     };
-
     fetchCategories();
   }, []);
+  
+
+  const handleSearchPress = (query) => {
+    navigation.navigate("Search", { query });  // Pass query to SearchScreen
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
 
       <View style={styles.header}>
-        <SearchBar onSearch={setSearchResults} />
+      <SearchBar onSearch={handleSearchPress} />
       </View>
+
       <ScrollView nestedScrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
         <FlatList
           style={styles.imageSlider}
@@ -90,33 +80,39 @@ const HomeScreen = () => {
           )}
         />
 
-        <View style={styles.dropdownContainer}>
-          <DropDownPicker
-            style={styles.dropdown}
-            open={open}
-            value={categories}
-            items={setCategories}
-            setOpen={setOpen}
-            setValue={categories}
-            setItems={setCategories}
-            placeholder="choose category"
-            placeholderStyle={styles.placeholderStyles}
-            onOpen={onGenderOpen}
-            zIndex={3000}
-            zIndexInverse={1000}
+        <View style={styles.Category}>
+          <RNPickerSelect
+            style={{
+              inputIOS: styles.inputIOS,
+              inputAndroid: styles.inputAndroid,
+              placeholder: styles.placeholderStyles,
+            }}
+            onValueChange={(value) => setCategory(value)}
+            items={items.map((cat) => ({ label: cat.name, value: cat.name }))}
+            placeholder={{
+              label: "ALL",
+              value: null,
+              color: "#000033",
+            }}
           />
 
 
         </View>
-
-
         <View style={styles.productList}>
           {products
-            ?.filter((item) => item.genres === categories)
+            ?.filter((item) => {
+              if (!category) {
+                return true;
+              }
+              return item.genres?.includes(category);
+            })
             .map((item, index) => (
               <ProductItem item={item} key={index} />
             ))}
         </View>
+
+
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -129,49 +125,93 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   header: {
-    backgroundColor: "#6633CC",
+    backgroundColor: "#6633CC", // Màu tím cho thanh tìm kiếm
     padding: 10,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between", // Cân bằng các thành phần
   },
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: 7,
-    gap: 10,
     backgroundColor: "white",
-    borderRadius: 3,
-    height: 38,
+    borderRadius: 5,
+    height: 40,
     flex: 1,
+    paddingHorizontal: 10,
+    elevation: 2, // Tạo bóng cho thanh tìm kiếm
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
   },
   icon: { paddingLeft: 10 },
   imageSlider: { paddingTop: 10 },
   image: {
-    width: width,
+    width: width - 20, // Thêm lề hai bên
     height: 200,
-    resizeMode: 'cover',
-  },
-  dropdownContainer: {
+    resizeMode: "cover",
     marginHorizontal: 10,
-    marginTop: 20,
-    marginBottom: 20,
-    justifyContent: 'center',
+  },
+  Category: {
+    marginHorizontal: 10, // Giảm khoảng cách ngang
+    marginTop: 10, // Giảm khoảng cách trên
+    marginBottom: 10,
+    justifyContent: "center",
+    backgroundColor: "black",
+
   },
   dropdown: {
-    borderColor: "#B7B7B7",
-    height: 30,
-    marginBottom: 15,
-    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: "#D1D1D1",
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: "white",
   },
   placeholderStyles: {
     color: "#B7B7B7",
-    fontSize: 14,
+    fontSize: 16,
+  },
+  inputIOS: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#D1D1D1",
+    color: "black",
+    backgroundColor: "white",
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderColor: "black",
+    color: "black",
+    backgroundColor: "#DDDDDD",
   },
   productList: {
     flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "space-between", // Khoảng cách đồng đều giữa các item
     flexWrap: "wrap",
-    margin: 14,
+    marginHorizontal: 10,
+  },
+  productItem: {
+    width: (width - 40) / 2, // Chia đều không gian cho mỗi sản phẩm
+    marginBottom: 15,
+    backgroundColor: "white",
+    borderRadius: 10,
+    elevation: 2, // Tạo hiệu ứng nổi
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+  },
+  selectedText: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "600",
+    textAlign: "center",
+    color: "#000033",
   },
 });
 

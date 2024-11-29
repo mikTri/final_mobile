@@ -11,6 +11,7 @@ import Foundation from '@expo/vector-icons/Foundation';
 
 import HomeScreen from '../screens/HomeScreen';
 import ProductInfoScreen from '../screens/ProductInfoScreen';
+import SearchScreen from '../screens/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -109,17 +110,11 @@ const StackNavigator = () => {
           options={{ headerShown: false }}
         />
 
-        {/* <Stack.Screen
-          name="Signin"
-          component={SigninScreen}
+        <Stack.Screen
+          name="Search"
+          component={SearchScreen}
           options={{ headerShown: false }}
         />
-
-        <Stack.Screen
-          name="Signup"
-          component={SignupScreen}
-          options={{ headerShown: false }}
-        /> */}
 
       </Stack.Navigator>
     </NavigationContainer>
