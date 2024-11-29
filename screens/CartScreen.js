@@ -5,20 +5,73 @@ import React from "react";
 import { useCart } from "../context/CartContext";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-
+import { useUser } from "../context/UserContext";
+import { API_URL } from '@env';
+import axios from "axios";
 
 const CartScreen = () => {
   const navigation = useNavigation();
   const { cart, addToCart, removeFromCart, incrementQuantity, decrementQuantity, clearCart } = useCart();
   const totalPrice = cart.reduce((acc, item) => acc + item.subTotal, 0);
-return (
+  const { user } = useUser();
+  const BASE_URL = `${API_URL}/orders`;
+
+
+  //Xử lý check out
+  const handleCheckout = async () => {
+    if (!user) {
+      alert("Vui lòng đăng nhập để tiếp tục mua hàng.");
+      return;
+    }
+
+    // if (cart.length === 0) {
+    //   alert("Giỏ hàng trống, không thể mua hàng.");
+    //   return;
+    // }
+
+    try {
+      const orderDetails = {
+        name: user.name,  // Lấy tên người dùng từ context
+        phoneNumber: user.phone,  // Lấy số điện thoại từ context
+        address: user.address,  // Lấy địa chỉ từ context
+        amount: totalPrice,
+        paymentId: "PAY123456",  // Bạn có thể thay thế theo yêu cầu thanh toán thực tế
+        email: user.email,  // Lấy email từ context
+        userid: user._id,  // Lấy userId từ context
+        products: cart.map(item => ({
+          productId: item._id,
+          productTitle: item.productTitle,
+          quantity: item.quantity,
+          price: item.price,
+          subTotal: item.subTotal,
+        })),
+        status: "Đang xử lý",
+      };
+
+      // Gửi yêu cầu tạo đơn hàng
+      const response = await axios.post(`${BASE_URL}/create`, orderDetails);
+
+      if (response.status === 201) {
+        alert("Mua hàng thành công!");
+
+        // Xóa giỏ hàng sau khi mua thành công
+        clearCart();  // Giả sử clearCart là hàm để xóa giỏ hàng trong context
+        // navigation.navigate('OrderDetails', { orderId: response.data._id }); // Chuyển hướng tới trang chi tiết đơn hàng
+      } else {
+        alert("Đã xảy ra lỗi khi tạo đơn hàng.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Đã xảy ra lỗi khi mua hàng.");
+    }
+  };
+
+  return (
   <SafeAreaView style={{ flex: 1, marginTop: 50 }}>
     <View style={styles.headerContainer}>
       <Text style={styles.header}>Giỏ hàng</Text>
     </View>
-    {/* <ScrollView contentContainerStyle={styles.container}> */}
     <ScrollView contentContainerStyle={[styles.container, { paddingBottom: 100 }]}>
-      {/* <Text style={styles.header}>Giỏ hàng</Text> */}
 
       {cart.length === 0 ? (
         <Text style={styles.emptyCart}>Bạn chưa có sản phẩm nào trong giỏ hàng.</Text>
@@ -31,20 +84,12 @@ return (
             {/* Thông tin sản phẩm */}
             <View style={styles.itemDetails}>
               <Text style={styles.itemName}>{item.productTitle}</Text>
-              {/* <Text style={styles.itemPrice}>{item.subTotal.toLocaleString('en-US')}đ</Text> */}
               <Text style={styles.itemPrice}>
-          {/* Kiểm tra subTotal trước khi dùng toLocaleString */}
           {item.subTotal ? item.subTotal.toLocaleString('en-US') : 'Đang cập nhật...'}đ
         </Text>
 
               {/* Phần số lượng và nút xóa nằm cùng hàng */}
               <View style={styles.quantityAndRemove}>
-                {/* Nút giảm số lượng */}
-                {/* <TouchableOpacity onPress={() => decrementQuantity(item.id)} style={styles.quantityButton}>
-                  <Text style={styles.quantityText}>-</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.quantity}>{item.quantity}</Text> */}
 
                 {/* Nút giảm số lượng */}
                 <TouchableOpacity 
@@ -91,7 +136,8 @@ return (
           </View>
 
           {/* Nút mua hàng */}
-          <TouchableOpacity onPress={() => alert("Mua hàng thành công!")} style={styles.checkoutButton}>
+          {/* <TouchableOpacity onPress={() => alert("Mua hàng thành công!")} style={styles.checkoutButton}> */}
+          <TouchableOpacity onPress={handleCheckout} style={styles.checkoutButton}>
             <Text style={styles.checkoutText}>Mua hàng</Text>
           </TouchableOpacity>
         </View>

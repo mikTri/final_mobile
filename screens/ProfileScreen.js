@@ -76,36 +76,14 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
     navigation.navigate('ChangePass');  
   };
 
+  const handletoMyOrders = () => {
+    navigation.navigate('MyOrders');  
+  };
+
   if (loading) {
     return <Text>Loading...</Text>;
   }
-//     const fetchUserProfile = async () => {
-//       try {
-//         const response = await axios.get(
-//         //   `http://192.168.1.4:8000/api/user/${userId}`
-//           `http://192.168.1.7:8000/api/user/${userId}`
-//         );
-//         console.log("API response:", response.data);
-//         // const { user } = response.data;
-//         setUser(response.data);
-//         console.log("Fetched user:", user);
-//       } catch (error) {
-//         console.log("Error fetching user profile", error);
-//       }
-//     };
 
-//     fetchUserProfile();
-//   }, []);
-
-//   const logout = () => {
-//     clearAuthToken();
-//   };
-
-//   const clearAuthToken = async () => {
-//     await AsyncStorage.removeItem("authToken");
-//     console.log("auth token cleared");
-//     navigation.replace("Signin");
-//   };
 
   return (
     <ScrollView style={{ padding: 10, flex: 1, backgroundColor: "white" }}>
@@ -134,10 +112,11 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
                 backgroundColor: "#EDEDED", // Nền xám nhạt cho avatar
               }}
             >
-              {user.images && user.images.length > 0 ? (
+              {user.images && user.images.length > 0 && !imageError ? (
                 <Image
-                  source={{ uri: user.images[0] }} // URL hình ảnh avatar
+                  source={{ uri: user.images[0]}} // URL hình ảnh avatar
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
+                  onError={() => setImageError(true)}
                 />
               ) : (
                 <MaterialIcons name="person" size={50} color="#6633CC" />
@@ -170,7 +149,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
       </View>
 
     {/* Don hang cua toi */}   
-      {/* <View
+      <View
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -180,6 +159,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
       >
 
         <Pressable
+        onPress={handletoMyOrders}
           style={{
             padding: 10,
             backgroundColor: "#6633CC",
@@ -189,7 +169,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
         >
           <Text style={{ textAlign: "center", color: "#fff", fontSize: 16, fontWeight: "bold" }}>Đơn hàng của tôi</Text>
         </Pressable>
-      </View> */}
+      </View>
 
       {/* Doi mat khau */}
       <View
