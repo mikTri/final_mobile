@@ -42,7 +42,7 @@ function BottomTabs() {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Category"
         component={HomeScreen}
         options={{
@@ -58,11 +58,11 @@ function BottomTabs() {
             tabBarActiveTintColor: "#49268a", // Màu của label khi được chọn
           tabBarInactiveTintColor: "grey",
         }}
-      />
+      /> */}
 
       <Tab.Screen
         name="Cart"
-        component={HomeScreen}
+        component={CartScreen}
         options={{
           tabBarLabel: "Giỏ hàng",
           // tabBarLabelStyle: { color: "#49268a" },
