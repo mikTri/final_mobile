@@ -1,6 +1,8 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { API_URL } from '@env';
+console.log('Loaded API_URL:', API_URL);
 
 const UserType = createContext();
 
@@ -8,6 +10,9 @@ const UserContext = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const [authToken, setAuthToken] = useState(null);
   const [user, setUser] = useState(null);
+  const BASE_URL = `${API_URL}/user`;
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     const getUserDataFromStorage = async () => {
@@ -15,7 +20,8 @@ const UserContext = ({ children }) => {
         const storedUserId = await AsyncStorage.getItem("userId");
         const storedAuthToken = await AsyncStorage.getItem("authToken");
         console.log("Stored UserId:", storedUserId);
-    console.log("Stored AuthToken:", storedAuthToken);
+        console.log("Stored AuthToken:", storedAuthToken);
+        
         if (storedUserId && storedAuthToken) {
           setUserId(storedUserId);
           setAuthToken(storedAuthToken);
@@ -25,6 +31,8 @@ const UserContext = ({ children }) => {
           }
       } catch (error) {
         console.log("Error fetching user data from AsyncStorage", error);
+      } finally {
+        setIsLoading(false); // Đánh dấu quá trình tải đã hoàn thành
       }
     };
     getUserDataFromStorage();
@@ -34,8 +42,8 @@ const UserContext = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.99:8000/api/user/signin",
-        // "https://nhom1-be.onrender.com/api/users/signin",
+        // "http://192.168.1.15:8000/api/user/signin",
+        `${BASE_URL}/signin`,
         { email, password }
       );
       const token = response.data.token;
@@ -44,7 +52,8 @@ const UserContext = ({ children }) => {
       // Lưu thông tin user vào AsyncStorage
       await AsyncStorage.setItem("authToken", token);
       await AsyncStorage.setItem("userId", userId);
-
+      console.log("Saved UserId to AsyncStorage:", userId);
+      
       setAuthToken(token);
       setUserId(userId);
       setUser(response.data.user);
@@ -86,8 +95,8 @@ const UserContext = ({ children }) => {
 
         try {
         const response = await axios.get(
-            `http://192.168.1.99:8000/api/user/${userId}`
-            // `https://nhom1-be.onrender.com/api/user/${userId}`
+            // `http://192.168.1.15:8000/api/user/${userId}`
+            `${BASE_URL}/${userId}`
 
         );
         console.log("API response:", response.data);
@@ -114,8 +123,8 @@ const UserContext = ({ children }) => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.99:8000/api/user/signup",
-        // "https://nhom1-be.onrender.com/api/user/signup",
+        // "http://192.168.1.15:8000/api/user/signup",
+        `${BASE_URL}/signup`,
         user
       );
       console.log("Đăng ký thành công: ", response.data);
@@ -139,9 +148,9 @@ const UserContext = ({ children }) => {
     try {
       // Gửi yêu cầu PUT tới server để cập nhật thông tin người dùng
       const response = await axios.put(
-        `http://192.168.1.99:8000/api/user/${userId}`,
+        // `http://192.168.1.15:8000/api/user/${userId}`,
+        `${BASE_URL}/${userId}`,
         updatedInfo
-        // `https://nhom1-be.onrender.com/api/user/${userId}`
       );
 
     //   setUser(response.data);
@@ -159,7 +168,8 @@ const UserContext = ({ children }) => {
     try {
       // Gửi yêu cầu PUT tới server để cập nhật thông tin người dùng
       const response = await axios.put(
-        `http://192.168.1.99:8000/api/user/changePassword/${userId}`,
+        // `http://192.168.1.15:8000/api/user/changePassword/${userId}`,
+        `${BASE_URL}/changePassword/${userId}`,        
         updatedInfo
         // `https://nhom1-be.onrender.com/api/user/${userId}`
       );
@@ -190,7 +200,9 @@ const UserContext = ({ children }) => {
 
   return (
     <UserType.Provider
-      value={{ user, userId, authToken, login, logout, signup, editInfo, fetchUserProfile, changePassword }}
+      value={{ user, userId, authToken, login, logout, signup, editInfo, fetchUserProfile, changePassword,
+        isLoading
+       }}
     >
       {children}
     </UserType.Provider>
