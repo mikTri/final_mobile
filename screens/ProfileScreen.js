@@ -54,6 +54,8 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
     if (user) {
       setLoading(false); // Dữ liệu người dùng đã có, chuyển loading thành false
       console.log("Current user: ", user);
+    } else {
+      setLoading(false); // Nếu không có user, cũng dừng loading để hiển thị nút đăng xuất
     }
   }, [user]);
 
@@ -112,7 +114,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
       </Text>
 
       {/* Ava */}
-      <View
+      {/* <View
             style={{
               justifyContent: "center",
               alignItems: "center",
@@ -141,7 +143,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
                 <MaterialIcons name="person" size={50} color="#6633CC" />
               )}
             </View>
-          </View>
+          </View> */}
 
     {/* Tai khoan */}
       <View
