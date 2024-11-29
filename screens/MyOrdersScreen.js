@@ -130,7 +130,7 @@ const toggleExpanded = (orderId) => {
         <View style={styles.productContainer}>
           <Image
             source={{
-              uri: item.products[0]?.image || "https://via.placeholder.com/100",
+              uri: item.products[0]?.image || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRLw7il8Sv0zksKO4e4poebNna1I4n3-SRrw&s",
             }}
             style={styles.productImage}
           />
@@ -178,7 +178,7 @@ const toggleExpanded = (orderId) => {
               <View key={index} style={styles.productDetails}>
                 <Image
                   source={{
-                    uri: product.image || "https://via.placeholder.com/100",
+                    uri: product.image || "https://templates.visual-paradigm.com/repository/images/4783989f-5816-4cca-970b-e5223e3d2f19/book-covers-design/illustrated-fantasy-book-cover.png",
                     // uri: "https://via.placeholder.com/100",
                   }}
                   style={styles.productImageSmall}
