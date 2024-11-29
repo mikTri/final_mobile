@@ -17,6 +17,7 @@ import CartScreen from "../screens/CartScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ChangePwScreen from '../screens/ChangePwScreen';
+import MyOrdersScreen from '../screens/MyOrdersScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -136,6 +137,12 @@ const StackNavigator = () => {
       <Stack.Screen
           name="ChangePass"
           component={ChangePwScreen}
+          options={{ headerShown: false }}
+        />
+
+<Stack.Screen
+          name="MyOrders"
+          component={MyOrdersScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
