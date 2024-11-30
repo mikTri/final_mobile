@@ -1,14 +1,29 @@
 import { StyleSheet, Text, View, Pressable, Image } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import { useCart } from "../context/CartContext";
+
+
 const ProductItem = ({ item }) => {
     const [addedToCart, setAddedToCart] = useState(false);
     const navigation = useNavigation();
+    const { addToCart } = useCart(); // Lấy hàm addToCart từ CartContext
+
+    const handleAddToCart = async () => {
+        console.log("Handle adding item to cart:", item);
+        if (!item || !item.id) {
+            console.error("Item không hợp lệ hoặc thiếu id:", item);
+            return; // Dừng hàm nếu item không hợp lệ
+          }
+        setAddedToCart(true); // Hiển thị trạng thái "đã thêm"
+        await addToCart(item); // Gọi hàm addToCart để thêm sản phẩm vào giỏ hàng
+        setTimeout(() => setAddedToCart(false), 2000); // Reset trạng thái sau 2 giây
+    };
     // console.log(item.cover); // Kiểm tra xem cover là gì
     return (
         <View style={{ paddingLeft: 4, margin: 16 }} >
             <Pressable
-                onPress={() => navigation.navigate("Info", {
+                onPress={() => navigation.navigate("ProductInfo", {
                     id: item.id,
                     title: item.title,
                     author: item.author,
@@ -41,7 +56,7 @@ const ProductItem = ({ item }) => {
                     <Text style={{ color: "#F4A460", fontWeight: "bold" }}> rate {item?.rating}
                     </Text>
                 </View>
-                <Pressable
+                {/* <Pressable
                     onPress={() => addItemToCart(item)}
                     style={{
                         backgroundColor: "#FFC72C",
@@ -59,6 +74,24 @@ const ProductItem = ({ item }) => {
                         </View>
                     ) : (
                         <Text>Bo vao gio hang</Text>
+                    )}
+                </Pressable> */}
+                <Pressable
+                    onPress={handleAddToCart} // Gắn hàm handleAddToCart vào nút
+                    style={{
+                        backgroundColor: '#FFC72C',
+                        padding: 10,
+                        borderRadius: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginHorizontal: 10,
+                        marginTop: 10,
+                    }}
+                >
+                    {addedToCart ? (
+                        <Text>Đã thêm vào giỏ</Text>
+                    ) : (
+                        <Text>Thêm vào giỏ</Text>
                     )}
                 </Pressable>
             </Pressable>
