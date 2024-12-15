@@ -80,7 +80,7 @@ const SigninScreen = () => {
           //   source={{
           //     uri: "https://drive.google.com/file/d/15-usau4hOjfntmm9S3a3mkNn_xopxICg/view?usp=drive_link",
           //   }}
-          source={require("../../assets/bookStoreLogo.png")}
+          source={require("../assets/bookStoreLogo.png")}
         />
       </View>
 

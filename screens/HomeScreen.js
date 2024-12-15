@@ -92,7 +92,7 @@ const HomeScreen = () => {
             placeholder={{
               label: "ALL",
               value: null,
-              color: "#000033",
+              color: "#6633CC",
             }}
           />
 
@@ -120,7 +120,7 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Platform.OS === "android" ? 59 : 0,
+    paddingTop: Platform.OS === "android" ? 0 : 50,
     flex: 1,
     backgroundColor: "white"
   },
@@ -171,22 +171,22 @@ const styles = StyleSheet.create({
   },
   placeholderStyles: {
     color: "#B7B7B7",
-    fontSize: 16,
+    fontSize: 10,
   },
   inputIOS: {
     fontSize: 16,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     borderWidth: 1,
-    borderColor: "#D1D1D1",
+    borderColor: "black",
     color: "black",
-    backgroundColor: "white",
+    backgroundColor: "#DDDDDD",
   },
   inputAndroid: {
     fontSize: 16,
     paddingHorizontal: 8,
     borderWidth: 1,
     borderColor: "black",
-    color: "black",
+    color: "#6633CC",
     backgroundColor: "#DDDDDD",
   },
   productList: {
@@ -205,14 +205,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 1,
-  },
-  selectedText: {
-    marginTop: 10,
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-    color: "#000033",
-  },
+  }
 });
 
 export default HomeScreen;

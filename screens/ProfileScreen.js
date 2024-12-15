@@ -6,14 +6,10 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import React, { useLayoutEffect, useEffect, useContext, useState } from "react";
+import React, { useLayoutEffect, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useUser } from "../context/UserContext"; 
+import { useUser } from "../context/UserContext";
 
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const ProfileScreen = () => {
@@ -30,7 +26,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
       headerLeft: () => (
         <Image
           style={{ width: 140, height: 60, resizeMode: "contain" }}
-          source={require("../../assets/bookStoreLogo.png")}
+          source={require("../assets/bookStoreLogo.png")}
         />
       ),
       headerRight: () => (
@@ -54,6 +50,8 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
     if (user) {
       setLoading(false); // Dữ liệu người dùng đã có, chuyển loading thành false
       console.log("Current user: ", user);
+    } else {
+      setLoading(false); // Nếu không có user, cũng dừng loading để hiển thị nút đăng xuất
     }
   }, [user]);
 
@@ -74,36 +72,14 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
     navigation.navigate('ChangePass');  
   };
 
+  const handletoMyOrders = () => {
+    navigation.navigate('MyOrders');  
+  };
+
   if (loading) {
     return <Text>Loading...</Text>;
   }
-//     const fetchUserProfile = async () => {
-//       try {
-//         const response = await axios.get(
-//         //   `http://192.168.1.4:8000/api/user/${userId}`
-//           `http://192.168.1.7:8000/api/user/${userId}`
-//         );
-//         console.log("API response:", response.data);
-//         // const { user } = response.data;
-//         setUser(response.data);
-//         console.log("Fetched user:", user);
-//       } catch (error) {
-//         console.log("Error fetching user profile", error);
-//       }
-//     };
 
-//     fetchUserProfile();
-//   }, []);
-
-//   const logout = () => {
-//     clearAuthToken();
-//   };
-
-//   const clearAuthToken = async () => {
-//     await AsyncStorage.removeItem("authToken");
-//     console.log("auth token cleared");
-//     navigation.replace("Signin");
-//   };
 
   return (
     <ScrollView style={{ padding: 10, flex: 1, backgroundColor: "white" }}>
@@ -112,7 +88,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
       </Text>
 
       {/* Ava */}
-      <View
+      {/* <View
             style={{
               justifyContent: "center",
               alignItems: "center",
@@ -132,16 +108,17 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
                 backgroundColor: "#EDEDED", // Nền xám nhạt cho avatar
               }}
             >
-              {user.images && user.images.length > 0 ? (
+              {user.images && user.images.length > 0 && !imageError ? (
                 <Image
-                  source={{ uri: user.images[0] }} // URL hình ảnh avatar
+                  source={{ uri: user.images[0]}} // URL hình ảnh avatar
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
+                  onError={() => setImageError(true)}
                 />
               ) : (
                 <MaterialIcons name="person" size={50} color="#6633CC" />
               )}
             </View>
-          </View>
+          </View> */}
 
     {/* Tai khoan */}
       <View
@@ -168,7 +145,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
       </View>
 
     {/* Don hang cua toi */}   
-      {/* <View
+      <View
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -178,6 +155,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
       >
 
         <Pressable
+        onPress={handletoMyOrders}
           style={{
             padding: 10,
             backgroundColor: "#6633CC",
@@ -187,7 +165,7 @@ const { user, logout, fetchUserProfile } = useUser(); // Lấy thông tin user t
         >
           <Text style={{ textAlign: "center", color: "#fff", fontSize: 16, fontWeight: "bold" }}>Đơn hàng của tôi</Text>
         </Pressable>
-      </View> */}
+      </View>
 
       {/* Doi mat khau */}
       <View

@@ -18,7 +18,6 @@ import { useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 // import axios from "axios";
 import { useUser } from "../context/UserContext";
-import { ScrollView } from "react-native-gesture-handler";
 
 const SignupScreen = () => {
   const [email, setEmail] = useState("");
@@ -69,7 +68,13 @@ const SignupScreen = () => {
 
     try {
       await signup(name, email, password, phone);
-      navigation.replace("Signin");
+      // navigation.replace("Signin");
+      Alert.alert("Thành công", "Đăng ký tài khoản thành công!", [
+        {
+          text: "Đăng nhập ngay",
+          onPress: () => navigation.replace("Signin"), // Điều hướng sau khi nhấn nút trong Alert
+        },
+      ]);
       // Reset các trường sau khi đăng ký thành công
       setName("");
       setEmail("");
@@ -98,7 +103,7 @@ const SignupScreen = () => {
           //   source={{
           //     uri: "https://drive.google.com/file/d/15-usau4hOjfntmm9S3a3mkNn_xopxICg/view?usp=drive_link",
           //   }}
-          source={require("../../assets/bookStoreLogo.png")}
+          source={require("../assets/bookStoreLogo.png")}
         />
       </View>
 

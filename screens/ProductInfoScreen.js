@@ -6,28 +6,45 @@ import {
     ScrollView,
     ImageBackground,
 } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useCart } from "../context/CartContext";
 
 const ProductInfoScreen = () => {
     const route = useRoute();
-
+    const navigation = useNavigation();
     const [addedToCart, setAddedToCart] = useState(false);
+    const { addToCart } = useCart();
 
-    const addItemToCart = (item) => {
-        setAddedToCart(true);
-        dispatch(addToCart(item));
-        setTimeout(() => {
-            setAddedToCart(false);
-        }, 60000);
-    };
-    
+    const addItemToCart = async () => {
+        try {
+            const item = {
+                _id: route?.params?.id,  
+                title: route?.params?.title,
+                author: route?.params?.author,
+                rating: route?.params?.rating,
+                description: route?.params?.description,
+                language: route?.params?.language,
+                genres: route?.params?.genres,
+                pages: route?.params?.pages,
+                discountPrice: route?.params?.discountPrice,
+                publisher: route?.params?.publisher,
+                cover: route?.params?.cover,
+            };
+
+            await addToCart(item);  
+            setAddedToCart(true);  
+            setTimeout(() => setAddedToCart(false), 2000);  
+        } catch (error) {
+            console.error("Có lỗi khi thêm vào giỏ:", error.message);
+        }
+    }
+
     return (
-        <ScrollView style={{ marginTop: 60, flex: 1, backgroundColor: 'white' }}>
-            {/* Ảnh bìa */}
+        <ScrollView style={{ marginTop: 0, flex: 1, backgroundColor: 'white' }}>
             <ImageBackground
-                style={styles.coverImage} // Áp dụng style từ StyleSheet
-                source={{ uri: route.params.cover }} 
+                style={styles.coverImage}
+                source={{ uri: route.params.cover }}
                 resizeMode="contain"
             >
             </ImageBackground>
@@ -77,7 +94,7 @@ const ProductInfoScreen = () => {
                 </Text>
             </View>
             <Text style={{ fontSize: 16, fontWeight: "bold", textDecorationLine: 'underline', textAlign: 'justify', padding: 10 }}>
-            Mô tả
+                Mô tả
             </Text>
             <Text style={{ fontSize: 16, fontWeight: "light", textAlign: 'justify', padding: 10 }}>
                 {route.params.description}
@@ -96,11 +113,11 @@ const ProductInfoScreen = () => {
                     }}
                 >
                     {addedToCart ? (
-                        <View >
-                            <Text>Added to Cart</Text>
+                        <View>
+                            <Text>Đã thêm vào giỏ hàng</Text>
                         </View>
                     ) : (
-                        <Text>Add to Cart</Text>
+                        <Text>Thêm vào giỏ hàng</Text>
                     )}
                 </Pressable>
             </View>
@@ -110,31 +127,18 @@ const ProductInfoScreen = () => {
     );
 };
 
-// title: item.title,
-//                     author: item.author,
-//                     rating: item.rating,
-//                     description: item.description,
-//                     language: item.language,
-//                     genres: item.genres,
-//                     pages: item.pages,
-//                     discountPrice: item.discountPrice,
-//                     publisher: item.publisher,
-//                     cover: item.cover, // Truyền chuỗi URL
-
-
 export default ProductInfoScreen;
 
-// Styles
 const styles = StyleSheet.create({
     header: {
         backgroundColor: "#6633CC",
-        padding: 10,
+        padding: 0,
         flexDirection: "row",
         alignItems: "center",
     },
     backButton: {
         alignItems: "center",
-        paddingRight: 8, // Thêm khoảng cách trên cho nút back\
+        paddingRight: 8, 
         marginBottom: 5,
         paddingLeft: 4,
     },
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
     coverImage: {
         width: '100%',
         height: 350,
-        resizeMode: "contain", // Kiểu hiển thị ảnh
+        resizeMode: "contain", 
         marginTop: 10,
     },
 });

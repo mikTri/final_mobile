@@ -9,9 +9,16 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Foundation from '@expo/vector-icons/Foundation';
 
+import SigninScreen from "../screens/SigninScreen";
+import SignupScreen from "../screens/SignupScreen";
 import HomeScreen from '../screens/HomeScreen';
 import ProductInfoScreen from '../screens/ProductInfoScreen';
-import SearchScreen from '../screens/SearchScreen';
+import SearchScreen from "../screens/SearchScreen";
+import CartScreen from "../screens/CartScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import EditProfileScreen from '../screens/EditProfileScreen';
+import ChangePwScreen from '../screens/ChangePwScreen';
+import MyOrdersScreen from '../screens/MyOrdersScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -36,28 +43,9 @@ function BottomTabs() {
           tabBarInactiveTintColor: "grey", // Màu của label khi không được chọn
         }}
       />
-
-      <Tab.Screen
-        name="Category"
-        component={HomeScreen}
-        options={{
-          tabBarLabel: "Danh mục",
-          // tabBarLabelStyle: { color: "#49268a" },
-          headerShown: false,
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Foundation name="list-bullet" size={24} color="#49268a" />
-            ) : (
-              <Foundation name="list-bullet" size={24} color="grey" />
-            ),
-          tabBarActiveTintColor: "#49268a", // Màu của label khi được chọn
-          tabBarInactiveTintColor: "grey",
-        }}
-      />
-
       <Tab.Screen
         name="Cart"
-        component={HomeScreen}
+        component={CartScreen}
         options={{
           tabBarLabel: "Giỏ hàng",
           // tabBarLabelStyle: { color: "#49268a" },
@@ -75,11 +63,11 @@ function BottomTabs() {
 
       <Tab.Screen
         name="Profile"
-        component={HomeScreen}
+        component={ProfileScreen}
         options={{
           tabBarLabel: "Tài khoản",
           // tabBarLabelStyle: { color: "#49268a" },
-          headerShown: false,
+          // headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons name="person" size={24} color="#49268a" />
@@ -99,13 +87,24 @@ const StackNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="HomeScreens"
+          name="Signin"
+          component={SigninScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="HomeScr"
           component={BottomTabs}
           options={{ headerShown: false }}
         />
 
         <Stack.Screen
-          name="Info"
+          name="ProductInfo"
           component={ProductInfoScreen}
           options={{ headerShown: false }}
         />
@@ -115,7 +114,21 @@ const StackNavigator = () => {
           component={SearchScreen}
           options={{ headerShown: false }}
         />
-
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChangePass"
+          component={ChangePwScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MyOrders"
+          component={MyOrdersScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
