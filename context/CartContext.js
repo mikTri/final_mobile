@@ -9,8 +9,8 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const { userId, isLoading  } = useUser();
   const [cart, setCart] = useState([]);
-  // const BASE_URL = `${API_URL}/cart`;
-  const BASE_URL = "https://nhom1-be.onrender.com/api/cart";
+  const BASE_URL = `${API_URL}/cart`;
+  // const BASE_URL = "https://nhom1-be.onrender.com/api/cart";
   // Hàm lấy giỏ hàng từ backend khi người dùng login
   const fetchCart = async () => {
     if (!userId) {

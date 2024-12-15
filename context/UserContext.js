@@ -10,8 +10,8 @@ const UserContext = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const [authToken, setAuthToken] = useState(null);
   const [user, setUser] = useState(null);
-  // const BASE_URL = `${API_URL}/user`;
-  const BASE_URL = "https://nhom1-be.onrender.com/api/user" ;
+  const BASE_URL = `${API_URL}/user`;
+  // const BASE_URL = "https://nhom1-be.onrender.com/api/user" ;
   const [isLoading, setIsLoading] = useState(true);
 
 

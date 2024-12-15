@@ -14,8 +14,8 @@ const CartScreen = () => {
   const { cart, addToCart, removeFromCart, incrementQuantity, decrementQuantity, clearCart } = useCart();
   const totalPrice = cart.reduce((acc, item) => acc + item.subTotal, 0);
   const { user } = useUser();
-  // const BASE_URL = `${API_URL}/orders`;
-  const BASE_URL = `https://nhom1-be.onrender.com/user`;
+  const BASE_URL = `${API_URL}/orders`;
+  // const BASE_URL = `https://nhom1-be.onrender.com/user`;
 
 
   //Xử lý check out

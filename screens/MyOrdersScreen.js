@@ -20,8 +20,8 @@ const MyOrdersScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  // const BASE_URL = `${API_URL}/orders`;
-  const BASE_URL = "https://nhom1-be.onrender.com/api/orders";
+  const BASE_URL = `${API_URL}/orders`;
+  // const BASE_URL = "https://nhom1-be.onrender.com/api/orders";
   const { userId, isLoading } = useUser();
 //   const [expandedOrder, setExpandedOrder] = useState(null);
 const [expandedOrders, setExpandedOrders] = useState({});
